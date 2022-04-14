@@ -38,5 +38,19 @@ namespace WebApiAutores.Controllers
         }
 
 
+        [HttpPut("{id:int}")]//api/autores/1  Este es un parametro de ruta
+        public async Task<ActionResult> Put(Autor autor, int id)
+        {
+            if (autor.ID != id)
+            {
+                return BadRequest("El id del autor no coincide con el id de la URL");
+                    
+            }
+
+            Context.Update(autor);
+            await Context.SaveChangesAsync();
+            return Ok();
+        }
+
     }
 }
