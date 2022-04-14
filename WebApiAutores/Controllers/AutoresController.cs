@@ -47,10 +47,33 @@ namespace WebApiAutores.Controllers
                     
             }
 
+            var existe = await Context.Autores.AnyAsync(x => x.ID == id);
+
+            if (!existe)
+            {
+                return NotFound();
+            }
+
             Context.Update(autor);
             await Context.SaveChangesAsync();
             return Ok();
         }
 
+
+        [HttpDelete("{id:int}")]
+        public async Task <ActionResult> Delete(int id)
+        {
+            var existe = await Context.Autores.AnyAsync(x => x.ID == id);
+
+            if (!existe)
+            {
+                return NotFound();
+            }
+            
+                Context.Remove(new Autor() { ID = id}); //es una instancia de autor para que EF sepa que debe eliminar
+                await Context.SaveChangesAsync();
+                return Ok();
+
+        }
     }
 }
