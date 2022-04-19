@@ -24,7 +24,7 @@ namespace WebApiAutores.Controllers
             //    new Autor() { ID = 3, Name = "Maria Antonieta", Edad = 28}
             //};
 
-            return await Context.Autores.ToListAsync();
+            return await Context.Autores.Include(x => x.Libros).ToListAsync();
         }
 
 
