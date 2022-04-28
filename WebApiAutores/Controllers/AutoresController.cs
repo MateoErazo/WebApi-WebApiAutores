@@ -16,7 +16,7 @@ namespace WebApiAutores.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult<List<Autor>>> Get()
+        public async Task<List<Autor>> Get()
         {
             //return new List<Autor> (){ 
             //    new Autor() { ID = 1, Name = "Juan Lopez", Edad = 25},
@@ -27,10 +27,56 @@ namespace WebApiAutores.Controllers
             return await Context.Autores.Include(x => x.Libros).ToListAsync();
         }
 
+        [HttpGet("primero")]//api/autores/primero?nombre=Mateo&apellido=Erazo
+        public async Task<ActionResult<Autor>> GetFirst([FromQuery] string valorQuery)
+        {
+            return await Context.Autores.FirstOrDefaultAsync();
+        } 
 
+        [HttpGet("CantLibros/{cant:int}")]
+        public async Task<ActionResult<List<Autor>>> GetDosAutor([FromRoute] int cant)
+        {
+            var tieneLibros = await Context.Autores.AnyAsync(x => x.Libros.Count >= cant);
+
+            if (!tieneLibros)
+            {
+                return NotFound();
+
+            }
+
+            return await Context.Autores.Where(x => x.Libros.Count >= cant).ToListAsync();
+        }
+
+
+        [HttpGet("{id:int}/{edad=18}")] 
+        public async Task<ActionResult<Autor>> GetAutorId(int id, int edad)
+        {
+            var autor = await Context.Autores.Include(x => x.Libros).FirstOrDefaultAsync(x => x.ID == id);
+
+            if (autor == null)  
+            {
+                return NotFound();
+            }
+
+            return autor;
+        }
+
+
+        [HttpGet("{nombre}/{apellido=erazo}")]
+        public async Task<ActionResult<Autor>> GetAutorNom(string nombre)
+        {
+            var autor = await Context.Autores.Include(x => x.Libros).FirstOrDefaultAsync(x => x.Nombre.Contains(nombre));
+
+            if (autor == null)
+            {
+                return NotFound();
+            }
+
+            return autor;
+        }
 
         [HttpPost]
-        public async Task<ActionResult> Post(Autor autor)
+        public async Task<ActionResult> Post([FromBody] Autor autor)
         {
             Context.Add(autor);
             await Context.SaveChangesAsync(); //guarda los cambios de manera asincrona
