@@ -25,10 +25,10 @@ namespace WebApiAutores.Entidades
 
         public List<Libro> Libros { get; set; } 
 
-        [NotMapped]
-        public int Mayor { get; set; }
-        [NotMapped]
-        public int Menor { get; set; }
+        //[NotMapped]
+        //public int Mayor { get; set; }
+        //[NotMapped]
+        //public int Menor { get; set; }
 
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
@@ -44,11 +44,11 @@ namespace WebApiAutores.Entidades
                 }
             }
 
-            if (Menor>Mayor)
-            {
-                yield return new ValidationResult("El numero no puede ser mas grande que el mayor", 
-                    new string[] {nameof(Menor) });
-            }
+            //if (Menor>Mayor)
+            //{
+            //    yield return new ValidationResult("El numero no puede ser mas grande que el mayor", 
+            //        new string[] {nameof(Menor) });
+            //}
         }
     }
 }
